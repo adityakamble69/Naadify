@@ -48,7 +48,7 @@
 
 		<!-- Title + progress -->
 		<div class="min-w-0 flex-1">
-			<div class="flex items-baseline justify-between gap-2 mb-1">
+			<div class="flex items-center justify-between gap-2 mb-1">
 				<p class="text-sm font-medium truncate">{currentTrack?.title ?? 'Loading…'}</p>
 				<div class="flex items-center gap-2.5 shrink-0">
 					<button
@@ -57,13 +57,6 @@
 						on:click={shareTrack}
 					>
 						{shareCopied ? 'copied!' : 'share'}
-					</button>
-					<button
-						type="button"
-						class="mono-label !text-[10px] hover:text-white transition-colors"
-						on:click={() => dispatch('search')}
-					>
-						search
 					</button>
 					<button
 						type="button"

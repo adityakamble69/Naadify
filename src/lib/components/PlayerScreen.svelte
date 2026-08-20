@@ -9,6 +9,7 @@
 	import ProgressBar from './ProgressBar.svelte';
 	import PlaylistSidebar from './PlaylistSidebar.svelte';
 	import SearchBar from './SearchBar.svelte';
+	import PlaylistImport from './PlaylistImport.svelte';
 	import GlassCard from './GlassCard.svelte';
 	import WeatherFX from './WeatherFX.svelte';
 	import WeatherToggle from './WeatherToggle.svelte';
@@ -16,6 +17,8 @@
 	let ytPlayerRef;
 	let queueOpen = false;
 	let searchOpen = false;
+	/** @type {'search'|'import'} */
+	let searchTab = 'search';
 
 	// Once the user has added anything via search, their queue takes over;
 	// otherwise fall back to the static curated playlist.
@@ -80,13 +83,24 @@
 
 	<!-- Big hero logo, over the background -->
 	<div
-		class="pointer-events-none absolute inset-x-0 top-20 sm:top-28 flex justify-center px-6 z-10"
+		class="pointer-events-none absolute inset-x-0 top-20 sm:top-28 flex flex-col items-center px-6 z-10 gap-4 sm:gap-6"
 	>
 		<img
 			src="/images/logo.png"
 			alt="Naadify"
 			class="w-full max-w-[280px] sm:max-w-[460px] h-auto drop-shadow-[0_6px_24px_rgba(0,0,0,0.55)] animate-fadeScaleIn"
 		/>
+		<button
+			type="button"
+			on:click={() => (searchOpen = true)}
+			class="pointer-events-auto glass rounded-full px-4 py-2 text-xs sm:text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1.5 animate-fadeScaleIn"
+		>
+			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+				<circle cx="11" cy="11" r="7"></circle>
+				<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+			</svg>
+			Search
+		</button>
 	</div>
 
 	<div class="min-h-screen w-full"></div>
@@ -99,7 +113,6 @@
 		on:next={nextTrack}
 		on:prev={prevTrack}
 		on:queue={() => (queueOpen = true)}
-		on:search={() => (searchOpen = true)}
 	>
 		<svelte:fragment slot="progress">
 			<ProgressBar on:seek={handleSeek} />
@@ -142,9 +155,22 @@
 				extraClass="relative w-full sm:w-[26rem] sm:mb-5 max-h-[75vh] sm:max-h-[80vh] flex flex-col animate-fadeScaleIn"
 			>
 				<div class="flex items-center justify-between mb-1 px-1">
-					<span class="text-xs text-white/40">
-						{$queue.length > 0 ? `${$queue.length} in queue` : 'Queue is empty — using default playlist'}
-					</span>
+					<div class="flex items-center gap-3">
+						<button
+							type="button"
+							class="mono-label !text-[10px] transition-colors {searchTab === 'search' ? 'text-accent' : 'hover:text-white'}"
+							on:click={() => (searchTab = 'search')}
+						>
+							search
+						</button>
+						<button
+							type="button"
+							class="mono-label !text-[10px] transition-colors {searchTab === 'import' ? 'text-accent' : 'hover:text-white'}"
+							on:click={() => (searchTab = 'import')}
+						>
+							import
+						</button>
+					</div>
 					{#if $queue.length > 0}
 						<button
 							type="button"
@@ -155,7 +181,14 @@
 						</button>
 					{/if}
 				</div>
-				<SearchBar />
+				<p class="text-xs text-white/40 px-1 mb-2">
+					{$queue.length > 0 ? `${$queue.length} in queue` : 'Queue is empty — using default playlist'}
+				</p>
+				{#if searchTab === 'search'}
+					<SearchBar />
+				{:else}
+					<PlaylistImport />
+				{/if}
 			</GlassCard>
 		</div>
 	{/if}
