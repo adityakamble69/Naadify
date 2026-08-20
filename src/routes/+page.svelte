@@ -1,0 +1,9 @@
+<script>
+	import PlayerScreen from '$lib/components/PlayerScreen.svelte';
+</script>
+
+<svelte:head>
+	<title>Naadify // music for coders</title>
+</svelte:head>
+
+<PlayerScreen />
