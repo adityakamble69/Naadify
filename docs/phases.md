@@ -55,27 +55,34 @@
 
 ---
 
-## Phase 8 — YouTube Data API Integration (planned, both search + playlist import)
-- [ ] Create/reuse Google Cloud project, enable YouTube Data API v3
-- [ ] Generate API key, restrict by HTTP referrer (prod domain + localhost)
-- [ ] Add `VITE_YOUTUBE_API_KEY` to `.env` (already gitignored)
-- [ ] Build `src/lib/utils/youtubeApi.js` — `searchVideos(query)` +
-      `fetchPlaylistItems(playlistId)` fetch wrappers
-- [ ] Build `queue.js` store — holds user-built queue, persisted to storage
-- [ ] Build `SearchBar.svelte` — input + button (not per-keystroke), results list
-      with thumbnail/title/channel, "add to queue" per result
+## Phase 8 — YouTube Data API Integration (search + playlist import)
+### 8a — Search (done)
+- [x] Add `VITE_YOUTUBE_API_KEY` support via `.env` (`.env.example` provided,
+      already gitignored) — user provides their own key
+- [x] Build `src/lib/utils/youtubeApi.js` — `searchVideos(query)` fetch wrapper,
+      typed `YouTubeApiError` for missing-key / quota / invalid-key / network cases
+- [x] Build `queue.js` store — holds user-built queue, persisted to localStorage
+- [x] Build `SearchBar.svelte` — input + button (not per-keystroke), results list
+      with thumbnail/title/channel, "add to queue" per result, inline glass error
+- [x] Wire `PlayerScreen.svelte` to read from `queue.js` when non-empty, else fall
+      back to static `playlist.js`; first add to an empty queue auto-plays it
+- [x] "search" toggle added to `BottomPlayerBar.svelte`, opens a glass drawer
+      (same pattern as the queue drawer) with `SearchBar` + "clear queue"
+- [x] `npm run build` verified clean
+
+### 8b — Playlist import (not started)
+- [ ] Extend `youtubeApi.js` with `fetchPlaylistItems(playlistId)` (+ pagination)
 - [ ] Build `PlaylistImport.svelte` — paste playlist URL, extract `list=` id,
       fetch + paginate all items, "Replace queue" / "Append to queue" choice
-- [ ] Wire `PlayerScreen.svelte` to read from `queue.js` when non-empty, else fall
-      back to static `playlist.js`
-- [ ] Add inline glass toast/error state for quota-exceeded / invalid video / bad
-      playlist URL cases
-- [ ] QA: search a song, add it, confirm it plays; import a real playlist, confirm
-      order + auto-advance works across the whole imported list
+- [ ] Reuse `queue.js` `replaceQueue` (already built) for the "Replace" path
+- [ ] Add inline glass toast/error state for bad playlist URL / private playlist
+- [ ] QA: import a real playlist, confirm order + auto-advance works across the
+      whole imported list
 - [ ] Update `memory.md` once this phase ships
 
 ---
 **Status legend:** ⏳ pending · 🔄 in progress · ✅ done
 
-**Current phase:** Phase 8 — YouTube Data API Integration (search + import), not
-started yet. Phases 0–6 are functionally complete; Phase 7 (deploy) still pending.
+**Current phase:** Phase 8b — Playlist import, not started yet. Phase 8a (search)
+is functionally complete pending the user's own manual QA with a real API key.
+Phases 0–6 are functionally complete; Phase 7 (deploy) still pending.

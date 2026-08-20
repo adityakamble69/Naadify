@@ -61,6 +61,13 @@
 					<button
 						type="button"
 						class="mono-label !text-[10px] hover:text-white transition-colors"
+						on:click={() => dispatch('search')}
+					>
+						search
+					</button>
+					<button
+						type="button"
+						class="mono-label !text-[10px] hover:text-white transition-colors"
 						on:click={() => dispatch('queue')}
 					>
 						queue
