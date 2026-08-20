@@ -8,7 +8,7 @@
 </script>
 
 <div
-	class="fixed bottom-[86px] sm:bottom-[98px] left-1/2 -translate-x-1/2 z-30 flex items-center gap-2"
+	class="fixed bottom-[140px] sm:bottom-[158px] left-1/2 -translate-x-1/2 z-30 flex items-center gap-2"
 >
 	<button
 		type="button"
