@@ -1,19 +1,23 @@
-# PRD.md — SyntaxBeats (Music Player for Coders)
+# PRD.md — Naadify (Music Player for Coders)
 
 ## 1. Project Overview
-SyntaxBeats is a glassmorphism-themed music player website built for coders/developers.
-On first visit, the user selects **Male** or **Female**, and based on that selection, a
-curated playlist automatically starts playing (via YouTube) with a matching background
-theme — no further prompts needed.
+Naadify is a glassmorphism-themed music player website built for coders/developers.
+The user lands directly on the **Player Screen** — no gender/theme selection anymore
+— and can immediately play a curated playlist (via YouTube), toggle ambient rain/fog
+effects, see a live "online now" counter, and share the current track.
+
+> **Renamed from SyntaxBeats → Naadify** (branding + logo updated across the app).
 
 ## 2. Goals
 - Give developers a quick, no-friction music player they can keep open while coding.
 - Deliver a premium, modern **glassmorphism** aesthetic (blurred, translucent panels,
   soft shadows, smooth edges).
-- Zero-click music start after the initial gender selection (browser autoplay policies
-  satisfied via that same click).
+- Zero-friction entry — no selection screen, straight into the player.
 - Seamless song switching (next/prev/click-to-play from playlist) without page reloads
   or visual jank.
+- **Next milestone:** remove the manual "copy YouTube ID into a JS file" workflow by
+  connecting Naadify directly to the YouTube Data API, so songs can be added from
+  inside the app itself.
 
 ## 3. Target Users
 - Developers/coders who want ambient/focus music while working.
@@ -21,35 +25,42 @@ theme — no further prompts needed.
   app.
 
 ## 4. Core User Flow
-1. User lands on the site → **Selection Screen** appears (glass card, blurred bg,
-   "Male" / "Female" options).
-2. User clicks one option.
-3. App transitions (smooth fade/scale) to the **Player Screen**:
-   - Background image matches the selection (male.jpg / female.jpg).
-   - First song from the matching playlist starts playing automatically.
-   - Playlist sidebar/drawer shows all songs for that selection.
-4. User can:
+1. User lands on the site → **Player Screen** loads immediately.
+   - Background image + big centered Naadify logo overlay.
+   - First song from the playlist starts playing (first user tap/click unlocks
+     autoplay per browser policy).
+   - Playlist ("queue") drawer shows all songs.
+2. User can:
    - Play / Pause
    - Next / Previous track
-   - Click any song in the playlist to jump to it
+   - Click any song in the queue to jump to it
    - See progress bar + current time / duration
-   - (Stretch) Switch gender/theme later via a small toggle without full reload
+   - See live "X online" counter (cosmetic)
+   - Toggle **Rain** and/or **Fog** ambient visual effects
+   - **Share** the current track (native share sheet or copy-to-clipboard link)
+3. **(Planned)** User can add music without editing code:
+   - Search YouTube directly from inside the app and add a result to the queue
+   - Paste any YouTube playlist URL and import all its videos as the queue
 
 ## 5. Functional Requirements
-| # | Requirement | Priority |
-|---|-------------|----------|
-| FR1 | Gender selection screen on first load | Must |
-| FR2 | Store selection in memory (sessionStorage) so refresh doesn't re-ask mid-session | Should |
-| FR3 | Auto-play matching playlist immediately after selection (using the click as the user-interaction unlock) | Must |
-| FR4 | Play / Pause control | Must |
-| FR5 | Next / Previous track control | Must |
-| FR6 | Clickable playlist with active-track highlight | Must |
-| FR7 | Progress bar with seek | Should |
-| FR8 | Volume control | Should |
-| FR9 | Background image swap based on gender selection | Must |
-| FR10 | Fully responsive (mobile + desktop) | Must |
-| FR11 | Loading state while YouTube iframe/player initializes | Should |
-| FR12 | Auto-advance to next song when current ends | Must |
+| # | Requirement | Priority | Status |
+|---|-------------|----------|--------|
+| FR1 | Land directly on Player Screen (no selection step) | Must | ✅ Done |
+| FR2 | Auto-play first track immediately (using the first click as the unlock gesture) | Must | ✅ Done |
+| FR3 | Play / Pause control | Must | ✅ Done |
+| FR4 | Next / Previous track control | Must | ✅ Done |
+| FR5 | Clickable queue with active-track highlight | Must | ✅ Done |
+| FR6 | Progress bar with seek | Should | ✅ Done |
+| FR7 | Volume control | Should | ⏳ Component exists, not wired into UI |
+| FR8 | Fully responsive (mobile + desktop) | Must | ✅ Done |
+| FR9 | Auto-advance to next song when current ends | Must | ✅ Done |
+| FR10 | Live "online now" counter (cosmetic) | Should | ✅ Done |
+| FR11 | Share current track (native share / clipboard fallback) | Should | ✅ Done |
+| FR12 | Rain ambient visual effect toggle | Should | ✅ Done |
+| FR13 | Fog ambient visual effect toggle | Should | ✅ Done |
+| FR14 | **YouTube search inside the app** — search box, results with thumbnail/title/channel, one-tap "add to queue" | Must (next) | ⏳ Planned |
+| FR15 | **YouTube playlist import** — paste a playlist URL, fetch all videos, replace/append to queue | Must (next) | ⏳ Planned |
+| FR16 | Persist any songs added via search/import so they survive a page refresh | Should (next) | ⏳ Planned |
 
 ## 6. Non-Functional Requirements
 - **Performance:** First screen should render instantly; YouTube API loads async.
@@ -59,20 +70,28 @@ theme — no further prompts needed.
   touches, dark-first color palette.
 - **Accessibility:** Keyboard-operable controls, sufficient contrast on glass panels.
 - **Browser compatibility:** Modern evergreen browsers (Chrome, Edge, Firefox, Safari).
+- **API quota awareness (new):** YouTube Data API v3 free tier is ~10,000 units/day;
+  a `search.list` call costs 100 units (~100 searches/day) and `playlistItems.list`
+  costs 1 unit per page. Search should be deliberate (button press, not per-keystroke)
+  to avoid burning quota.
 
-## 7. Out of Scope (v1)
+## 7. Out of Scope (still, for now)
 - User accounts / login
-- Persisting playlists across devices
-- Uploading custom songs
-- Multi-language UI (English only for v1)
+- Persisting playlists across devices/browsers (only local/session persistence)
+- Uploading custom (non-YouTube) audio files
+- Multi-language UI (English/Hinglish only)
+- A backend/server component — the YouTube API key will be used client-side,
+  restricted by HTTP referrer in Google Cloud Console (see architecture.md §7)
 
-## 8. Open Items (pending from user)
-- [ ] Male background image
-- [ ] Female background image
-- [ ] Male playlist — YouTube video IDs/links + titles
-- [ ] Female playlist — YouTube video IDs/links + titles
+## 8. Open Items (pending from Aditya)
+- [ ] Decide: create a new Google Cloud project + YouTube Data API v3 key, or reuse
+      an existing one
+- [ ] Confirm final queue song list once search/import is live (no more placeholder
+      `REPLACE_WITH_YOUTUBE_ID_x` entries needed)
 
 ## 9. Success Criteria
-- User reaches playing music within 2 clicks (select → auto-play).
+- User reaches playing music within 1 click (land → tap play).
 - No broken autoplay (no second prompt needed).
 - Visual QA: glassmorphism renders correctly on Chrome + Safari + mobile.
+- **(Next)** Aditya can add a new song to the queue in under 10 seconds without
+  touching any code file.

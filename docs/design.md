@@ -1,4 +1,4 @@
-# design.md — SyntaxBeats
+# design.md — Naadify
 
 ## 1. Design Direction
 Dark-first, cinematic glassmorphism with a coder/developer edge — think "frosted glass
@@ -18,11 +18,13 @@ cluttered, since this sits in the background while someone codes.
 | `--accent-glow` | `rgba(124,92,255,0.45)` | Glow/shadow behind active elements |
 | `--text-primary` | `#F5F5F7` | Main text on dark |
 | `--text-secondary` | `rgba(245,245,247,0.6)` | Secondary/meta text |
-| `--male-accent` | `#4EA1FF` (electric blue) | Male theme highlight tint |
-| `--female-accent` | `#FF5CA8` (magenta-pink) | Female theme highlight tint |
+| `--accent` | `#3FA0FF` (electric blue) | Single shared accent (replaces the old male/female split) |
 
-Background images (male.jpg / female.jpg) sit behind everything with a dark overlay
+Background image (`bg.jpg`) sits behind everything with a dark overlay
 (`rgba(0,0,0,0.45)`) + heavy blur on non-focal areas so glass cards stay legible.
+A large Naadify logo is overlaid near the top of the page, above the background.
+Optional **rain** / **fog** CSS effects (`WeatherFX.svelte`) can render above the
+background and below the glass UI (z-index between the two).
 
 ## 3. Typography
 
@@ -70,8 +72,8 @@ Background images (male.jpg / female.jpg) sit behind everything with a dark over
 - **Player Screen (mobile):** single column, playlist becomes a swipe-up/collapsible
   drawer beneath the now-playing card
 
-## 8. Theme Variation by Gender Selection
-- Background image changes (male.jpg / female.jpg)
-- A subtle accent tint (`--male-accent` or `--female-accent`) is applied to progress
-  bar fill / active states, layered on top of the core violet/mint palette — keeps
-  brand consistency while still feeling personalized
+## 8. Theme Variation (updated)
+- The old male/female accent-tint split is **removed** — one shared `--accent` color
+  is used everywhere (progress bar fill, active states, glow).
+- Instead, personalization now comes from the optional **rain** / **fog** ambient
+  overlays, toggled independently, rather than a fixed per-user theme choice.
