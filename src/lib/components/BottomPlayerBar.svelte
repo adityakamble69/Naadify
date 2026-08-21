@@ -37,7 +37,7 @@
 
 <div class="fixed bottom-0 left-0 right-0 z-30 flex justify-center p-4 sm:p-5">
 	<div
-		class="glass glass-strong rounded-3xl px-4 py-3 sm:px-5 sm:py-3.5 w-full max-w-xl flex items-center gap-3 sm:gap-4 animate-fadeScaleIn"
+		class="glass glass-strong glass-liquid rounded-3xl px-4 py-3 sm:px-5 sm:py-3.5 w-full max-w-xl flex items-center gap-3 sm:gap-4 animate-fadeScaleIn"
 	>
 		<!-- Album thumb -->
 		<div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden shrink-0 bg-white/10">

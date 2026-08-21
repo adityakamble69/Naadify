@@ -41,15 +41,36 @@ background and below the glass UI (z-index between the two).
 - Playlist item title: 14px
 - Meta/mono labels (time, index): 12–13px, JetBrains Mono
 
-## 4. Glassmorphism Spec
-- `backdrop-filter: blur(20px)` (cards), `blur(40px)` (large background panels)
-- Background fill: `var(--glass-fill)`
-- Border: `1px solid var(--glass-border)`
-- Border radius: `24px` for main cards, `16px` for buttons/small elements
-- Shadow: soft, multi-layer —
-  `0 8px 32px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.08) inset`
-- Hover/active state: fill lightens to `--glass-fill-strong`, subtle
-  `box-shadow: 0 0 24px var(--accent-glow)` glow appears
+## 4. Glassmorphism Spec — "Liquid Glass" material (updated 2026-08-21)
+Redesigned to read like iOS 26's Liquid Glass rather than flat glassmorphism —
+every surface now behaves like a lensed, refractive material instead of a
+uniform tinted panel:
+- `backdrop-filter: blur(26px) saturate(190%)` — the extra saturation keeps
+  colors behind the glass vivid instead of going muddy grey, which is the main
+  visual tell of real liquid glass vs. flat glassmorphism.
+- **Directional lighting, not a flat tint:** background is a top-to-bottom
+  gradient (bright at the top, fading down) rather than a single flat fill,
+  and the border is brighter on top (`rgba(255,255,255,0.38)`) than on the
+  sides — simulates a curved surface catching light from above.
+- **Specular highlight layer:** a `::before` pseudo-element radial-gradients
+  a soft white highlight into the top-left corner, plus a faint accent-blue
+  pickup in the bottom-right, so the glass feels like it's bending and
+  reflecting its surroundings rather than sitting flat.
+- **Bevel shadow:** `inset` box-shadow combo gives a bright 1px top inner edge
+  and a soft dark inner shadow near the bottom, reading as physical thickness.
+- **Signature moment — `.glass-liquid`:** reserved for the bottom player bar
+  only (the one element always on screen). A slow 7s diagonal sheen drifts
+  across it, like light refracting through a real liquid-glass lens. Kept to
+  one element deliberately — everywhere else stays quieter so this doesn't
+  turn into visual noise.
+- **Spring motion:** buttons (`.glass-btn`) use an overshoot cubic-bezier
+  (`0.34, 1.56, 0.64, 1`) on hover/press instead of a linear ease, giving the
+  same soft "bounce" feel as iOS's spring-based UI animations.
+- Border radius: `24px`–`28px` for main cards, fully rounded (`rounded-full`)
+  for buttons and pills — unchanged, this already matched the iOS pill idiom.
+- Shadow: `0 12px 40px rgba(0,0,0,0.4)` outer + the inset bevel described above.
+- Hover/active state: fill lightens via a layered `background-color`, subtle
+  `box-shadow: 0 0 24px var(--accent-glow)` glow appears on primary actions.
 
 ## 5. Iconography
 - Line-style icons (e.g. Lucide icons) — play, pause, skip-next, skip-previous,
@@ -66,11 +87,16 @@ background and below the glass UI (z-index between the two).
 
 ## 7. Layout Notes
 - **Selection Screen:** centered single glass card, max-width ~420px, two large glass
-  buttons stacked (mobile) or side-by-side (desktop)
-- **Player Screen (desktop):** two-column — left = now-playing glass card with big
-  controls, right = playlist sidebar (scrollable glass panel)
-- **Player Screen (mobile):** single column, playlist becomes a swipe-up/collapsible
-  drawer beneath the now-playing card
+  buttons stacked (mobile) or side-by-side (desktop) — *legacy note, this screen was
+  removed in Phase 1; kept here for history only.*
+- **Player Screen (desktop):** background + centered logo + floating bottom player
+  bar (the signature liquid-glass surface). **Queue drawer docks to the left edge**
+  as a tall floating sidebar (`sm:ml-5 sm:my-5`, stretches to near-full height) —
+  moved from the right side on 2026-08-21 per Aditya's request. Search/import
+  drawer stays centered.
+- **Player Screen (mobile):** single column, queue and search both surface as a
+  bottom sheet (thumb-reachable), same as before — only the desktop position
+  changed, mobile layout is unaffected by the left-dock change.
 
 ## 8. Theme Variation (updated)
 - The old male/female accent-tint split is **removed** — one shared `--accent` color

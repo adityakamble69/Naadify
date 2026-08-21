@@ -42,9 +42,29 @@
       source, not just the docs, before continuing.**
 - [x] `npm run build` re-verified clean on 2026-08-21 (static adapter output OK;
       only harmless Svelte/Kit internal "not exported" warnings, no failures)
+- [x] **Liquid Glass UI redesign (2026-08-21)** — replaced flat glassmorphism with
+      an iOS-26-style Liquid Glass material: saturated blur (`saturate(190%)`),
+      directional top-lit gradient fill + brighter top border, specular highlight
+      pseudo-layer (top-left white glow + faint accent-blue pickup bottom-right),
+      inset bevel shadow for physical "thickness", and spring-easing bounce on
+      buttons. Added a single signature touch — a slow 7s drifting sheen
+      (`.glass-liquid`) — on the bottom player bar only, kept off every other
+      surface deliberately so it stays a moment, not noise. Cascades everywhere
+      automatically since all components already share the `.glass`/`.glass-btn`
+      utility classes from `app.css`.
+- [x] **Queue drawer moved to the left (2026-08-21)** — was a right-docked floating
+      card, now docks to the left edge as a tall sidebar-style panel on desktop
+      (`sm:ml-5 sm:my-5`, stretches to near-full height via `sm:items-stretch`).
+      Mobile behavior unchanged (still a bottom sheet). Search/import drawer
+      intentionally left centered — not part of this request.
 
 ## 🔄 Currently Being Worked On
 - Nothing actively mid-edit.
+- Liquid Glass redesign hasn't been visually screenshot-tested (sandboxed build
+  environment has no browser available) — build is clean and CSS is
+  spec-correct, but a real look-over in a browser (esp. Safari, where
+  `backdrop-filter` + `mix-blend-mode` support can be pickier) is worth doing
+  before calling this fully QA'd.
 - **Real next task: Phase 7 — Deploy.** Nothing under Phase 7 has been done —
   no static adapter deploy run, no Vercel/Netlify push, no prod smoke test.
 - Phase 8 QA still needs Aditya's own manual pass with a **real** YouTube Data

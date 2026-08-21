@@ -89,7 +89,7 @@
 **Status legend:** ⏳ pending · 🔄 in progress · ✅ done
 
 **Current phase:** Phase 8 (8a search + 8b import) is functionally complete —
-code, wiring, and build all verified. Only remaining item is Aditya's manual QA
-with a real YouTube API key. **Phase 7 (deploy) is the next real gap** — nothing
-under Phase 7 has been done yet (no static adapter deploy, no Vercel/Netlify
-push, no prod smoke test).
+code, wiring, and build all verified. UI now uses an iOS-style Liquid Glass
+material (2026-08-21) with the queue docked left instead of right. **Phase 7
+(deploy) is the next real gap** — nothing under Phase 7 has been done yet (no
+static adapter deploy, no Vercel/Netlify push, no prod smoke test).

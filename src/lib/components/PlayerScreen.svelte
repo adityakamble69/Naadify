@@ -119,9 +119,10 @@
 		</svelte:fragment>
 	</BottomPlayerBar>
 
-	<!-- Queue drawer -->
+	<!-- Queue drawer — docked to the left as a floating liquid-glass sidebar
+	     on desktop; still a reachable bottom sheet on mobile. -->
 	{#if queueOpen}
-		<div class="fixed inset-0 z-40 flex items-end sm:items-center sm:justify-end">
+		<div class="fixed inset-0 z-40 flex items-end sm:items-stretch sm:justify-start">
 			<button
 				type="button"
 				class="absolute inset-0 bg-black/55 backdrop-blur-sm cursor-default"
@@ -132,7 +133,7 @@
 			<GlassCard
 				rounded="rounded-t-3xl sm:rounded-3xl"
 				padding="p-5"
-				extraClass="relative w-full sm:w-80 sm:mr-5 sm:mb-5 max-h-[70vh] sm:max-h-[80vh] flex animate-fadeScaleIn"
+				extraClass="relative w-full sm:w-80 sm:ml-5 sm:my-5 max-h-[70vh] sm:max-h-none flex animate-fadeScaleIn"
 			>
 				<PlaylistSidebar {playlist} on:select={selectTrack} />
 			</GlassCard>

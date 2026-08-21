@@ -29,34 +29,107 @@
 }
 
 @layer components {
-	/* Core reusable glass surface */
+	/* Core reusable glass surface — iOS-style "Liquid Glass" material:
+	   layered specular highlight (bright top-left rim + faint accent-tinted
+	   pickup at the bottom-right), saturated blur so colors behind the glass
+	   stay vivid instead of muddy, and a soft top rim / bottom bevel that
+	   reads as a curved, refractive surface rather than a flat tinted panel. */
 	.glass {
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		backdrop-filter: blur(20px);
-		-webkit-backdrop-filter: blur(20px);
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		background: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 0.16) 0%,
+			rgba(255, 255, 255, 0.05) 45%,
+			rgba(255, 255, 255, 0.02) 100%
+		);
+		border: 1px solid rgba(255, 255, 255, 0.16);
+		border-top-color: rgba(255, 255, 255, 0.38);
+		backdrop-filter: blur(26px) saturate(190%);
+		-webkit-backdrop-filter: blur(26px) saturate(190%);
 		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.35),
-			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+			0 12px 40px rgba(0, 0, 0, 0.4),
+			0 1px 0 rgba(255, 255, 255, 0.04),
+			inset 0 1px 1px rgba(255, 255, 255, 0.5),
+			inset 0 -16px 24px -18px rgba(255, 255, 255, 0.08);
+	}
+	.glass::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background:
+			radial-gradient(130% 60% at 12% -25%, rgba(255, 255, 255, 0.45), transparent 55%),
+			radial-gradient(90% 60% at 105% 120%, rgba(63, 160, 255, 0.12), transparent 60%);
+		mix-blend-mode: overlay;
+		pointer-events: none;
 	}
 
 	.glass-strong {
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.12);
+		background: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 0.22) 0%,
+			rgba(255, 255, 255, 0.08) 45%,
+			rgba(255, 255, 255, 0.03) 100%
+		);
+		border-color: rgba(255, 255, 255, 0.2);
+		border-top-color: rgba(255, 255, 255, 0.48);
+	}
+
+	/* Signature "liquid" surface — reserved for the hero player bar. Adds a
+	   slow diagonal sheen that drifts across the glass, like light bending
+	   through a real liquid-glass lens. Kept to one element so it stays a
+	   moment, not visual noise. */
+	.glass-liquid::after {
+		content: '';
+		position: absolute;
+		top: -50%;
+		left: -25%;
+		width: 55%;
+		height: 200%;
+		background: linear-gradient(
+			75deg,
+			transparent 20%,
+			rgba(255, 255, 255, 0.16) 45%,
+			rgba(255, 255, 255, 0.04) 60%,
+			transparent 80%
+		);
+		mix-blend-mode: overlay;
+		pointer-events: none;
+		animation: liquidSheen 7s ease-in-out infinite;
 	}
 
 	.glass-btn {
-		@apply glass rounded-full flex items-center justify-center transition-all duration-200 ease-out;
+		@apply glass rounded-full flex items-center justify-center;
+		transition:
+			transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+			background-color 0.25s ease-out,
+			box-shadow 0.3s ease-out;
 	}
 	.glass-btn:hover {
-		background: rgba(255, 255, 255, 0.08);
-		transform: scale(1.05);
+		background-color: rgba(255, 255, 255, 0.07);
+		transform: scale(1.07);
 	}
 	.glass-btn:active {
-		transform: scale(0.96);
+		transform: scale(0.9);
+		transition-duration: 0.15s;
 	}
 
 	.mono-label {
 		@apply font-mono uppercase tracking-widest text-[11px] text-[#F5F5F7]/50;
+	}
+}
+
+@layer utilities {
+	@keyframes liquidSheen {
+		0% {
+			transform: translateX(-40%) translateY(-8%) rotate(8deg);
+		}
+		50% {
+			transform: translateX(220%) translateY(8%) rotate(8deg);
+		}
+		100% {
+			transform: translateX(220%) translateY(8%) rotate(8deg);
+		}
 	}
 }
