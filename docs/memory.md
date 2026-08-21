@@ -3,8 +3,9 @@
 ## Project Snapshot
 - **Name:** Naadify — glassmorphism music player for coders (renamed from SyntaxBeats)
 - **Stack:** SvelteKit + Tailwind CSS + YouTube IFrame Player API
-- **Current phase:** Phases 0–6 functionally complete. Phase 7 (deploy) pending.
-  **Phase 8 (YouTube Data API — search + playlist import) is the active next task.**
+- **Current phase:** Phases 0–6 and Phase 8 (search + playlist import) are
+  functionally complete and build-verified. **Phase 7 (deploy) is the only
+  phase with zero progress — that's the real next task.**
 
 ## ✅ Completed
 - [x] Original SyntaxBeats build: selection screen, player, YouTube playback,
@@ -30,15 +31,25 @@
       it kept overlapping the player bar at smaller viewport heights.
 - [x] `.gitignore` added (node_modules, .svelte-kit, build, .env, OS/log junk)
 - [x] `npm install && npm run build` verified clean after every round of changes
+- [x] **Phase 8a — Search** — `youtubeApi.js` (`searchVideos`), `queue.js` store
+      (localStorage-persisted), `SearchBar.svelte`, wired into `PlayerScreen.svelte`
+- [x] **Phase 8b — Playlist import** — `extractPlaylistId` + `fetchPlaylistItems`
+      (paginated) in `youtubeApi.js`, full `PlaylistImport.svelte` (paste URL,
+      loading/error/success states, preview list, append/replace buttons), wired
+      into `PlayerScreen.svelte`'s search drawer as a "search"/"import" tab switch.
+      **Note (2026-08-21): this was already fully built in the codebase — phases.md
+      had it marked "not started" from a stale doc update. Verified against actual
+      source, not just the docs, before continuing.**
+- [x] `npm run build` re-verified clean on 2026-08-21 (static adapter output OK;
+      only harmless Svelte/Kit internal "not exported" warnings, no failures)
 
 ## 🔄 Currently Being Worked On
-- Nothing actively mid-edit. Just finished writing this doc update.
-- **Up next (confirmed with Aditya, 2026-08-20):** YouTube Data API integration —
-  he wants **both** an in-app search bar *and* a paste-a-playlist-URL import, so he
-  never has to hand-copy a YouTube video ID again. See architecture.md §5 and
-  phases.md Phase 8 for the full plan — not started yet, waiting on Aditya to
-  generate/share a YouTube Data API v3 key (or confirm he wants Claude to walk him
-  through creating one).
+- Nothing actively mid-edit.
+- **Real next task: Phase 7 — Deploy.** Nothing under Phase 7 has been done —
+  no static adapter deploy run, no Vercel/Netlify push, no prod smoke test.
+- Phase 8 QA still needs Aditya's own manual pass with a **real** YouTube Data
+  API v3 key (search + import both worked in build/lint terms, but haven't been
+  exercised against the live API by a human yet).
 
 ## ⏳ Blocked / Waiting On (from Aditya)
 - [ ] A YouTube Data API v3 key (new or existing Google Cloud project), restricted

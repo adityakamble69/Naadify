@@ -15,9 +15,10 @@ effects, see a live "online now" counter, and share the current track.
 - Zero-friction entry — no selection screen, straight into the player.
 - Seamless song switching (next/prev/click-to-play from playlist) without page reloads
   or visual jank.
-- **Next milestone:** remove the manual "copy YouTube ID into a JS file" workflow by
-  connecting Naadify directly to the YouTube Data API, so songs can be added from
-  inside the app itself.
+- **Delivered:** removed the manual "copy YouTube ID into a JS file" workflow by
+  connecting Naadify directly to the YouTube Data API — songs can now be added
+  from inside the app itself, via search or playlist-URL import.
+- **Next milestone:** get the app actually live (Phase 7 — deploy to Vercel/Netlify).
 
 ## 3. Target Users
 - Developers/coders who want ambient/focus music while working.
@@ -38,9 +39,12 @@ effects, see a live "online now" counter, and share the current track.
    - See live "X online" counter (cosmetic)
    - Toggle **Rain** and/or **Fog** ambient visual effects
    - **Share** the current track (native share sheet or copy-to-clipboard link)
-3. **(Planned)** User can add music without editing code:
-   - Search YouTube directly from inside the app and add a result to the queue
-   - Paste any YouTube playlist URL and import all its videos as the queue
+   - **Search YouTube** directly from inside the app and add a result to the queue
+   - **Paste any YouTube playlist URL** and import all its videos (append or
+     replace the current queue)
+3. **(Pending Aditya's manual QA)** Both search and import are code-complete and
+   build-verified, but haven't yet been exercised against a live YouTube Data API
+   key by a human.
 
 ## 5. Functional Requirements
 | # | Requirement | Priority | Status |
@@ -58,9 +62,10 @@ effects, see a live "online now" counter, and share the current track.
 | FR11 | Share current track (native share / clipboard fallback) | Should | ✅ Done |
 | FR12 | Rain ambient visual effect toggle | Should | ✅ Done |
 | FR13 | Fog ambient visual effect toggle | Should | ✅ Done |
-| FR14 | **YouTube search inside the app** — search box, results with thumbnail/title/channel, one-tap "add to queue" | Must (next) | ⏳ Planned |
-| FR15 | **YouTube playlist import** — paste a playlist URL, fetch all videos, replace/append to queue | Must (next) | ⏳ Planned |
-| FR16 | Persist any songs added via search/import so they survive a page refresh | Should (next) | ⏳ Planned |
+| FR14 | **YouTube search inside the app** — search box, results with thumbnail/title/channel, one-tap "add to queue" | Must (next) | ✅ Done — pending live QA |
+| FR15 | **YouTube playlist import** — paste a playlist URL, fetch all videos, replace/append to queue | Must (next) | ✅ Done — pending live QA |
+| FR16 | Persist any songs added via search/import so they survive a page refresh | Should (next) | ✅ Done (localStorage) |
+| FR17 | Deploy to a live URL (Vercel/Netlify) | Must (next) | ⏳ Not started |
 
 ## 6. Non-Functional Requirements
 - **Performance:** First screen should render instantly; YouTube API loads async.
@@ -84,10 +89,11 @@ effects, see a live "online now" counter, and share the current track.
   restricted by HTTP referrer in Google Cloud Console (see architecture.md §7)
 
 ## 8. Open Items (pending from Aditya)
-- [ ] Decide: create a new Google Cloud project + YouTube Data API v3 key, or reuse
-      an existing one
-- [ ] Confirm final queue song list once search/import is live (no more placeholder
-      `REPLACE_WITH_YOUTUBE_ID_x` entries needed)
+- [ ] Generate/share a real `VITE_YOUTUBE_API_KEY` and do a live manual QA pass on
+      search + playlist import (code side is done, needs a human with a real key)
+- [ ] Confirm final queue song list once search/import QA is done (no more
+      placeholder `REPLACE_WITH_YOUTUBE_ID_x` entries needed)
+- [ ] Decide hosting target for Phase 7 deploy — Vercel or Netlify
 
 ## 9. Success Criteria
 - User reaches playing music within 1 click (land → tap play).

@@ -6,15 +6,16 @@
 | Framework | **SvelteKit** | Fast, file-based routing, static-adapter friendly |
 | Styling | **Tailwind CSS** | Fast utility-based glassmorphism styling (`backdrop-blur`, `bg-white/10`, etc.) |
 | Music playback | **YouTube IFrame Player API** | Free, reliable, no backend audio hosting needed |
-| Music *discovery* (planned) | **YouTube Data API v3** (`search.list`, `playlistItems.list`) | Lets the app fetch real videos instead of hand-typed IDs |
-| State | **Svelte stores** (writable) | Lightweight global state for player status, playlist, weather, online count |
-| Persistence | **sessionStorage** (current), will extend to store the search/import-built queue | Survive refresh mid-session |
+| Music *discovery* | **YouTube Data API v3** (`search.list`, `playlistItems.list`) | Lets the app fetch real videos instead of hand-typed IDs — **implemented** in Phase 8 |
+| State | **Svelte stores** (writable) | Lightweight global state for player status, playlist, weather, online count, search queue |
+| Persistence | **localStorage** (`naadify_queue` key, via `stores/queue.js`) | Search/import-built queue survives a full refresh, not just mid-session |
 | Fonts | **JetBrains Mono** (accents) + **Sora** (body) | Coder-themed accents + clean readability |
-| Hosting | Vercel / Netlify (static adapter) | Simple static deploy, no server needed |
+| Hosting | Vercel / Netlify (static adapter) | Simple static deploy, no server needed — **not yet deployed** (Phase 7 pending) |
 
-No backend/database for v1 — playlists are static config files today, and will become
-a **client-side-fetched, locally-cached** list once the YouTube Data API is wired in
-(see §7). Still no server required.
+No backend/database — playlists are static config files (`playlist.js`) by default,
+but once the user has searched or imported anything, the app switches to reading
+from the **client-side-fetched, locally-cached** `queue.js` store instead (see §5).
+Still no server required.
 
 ## 2. App Flow
 
@@ -51,6 +52,8 @@ syntaxbeats/                                # package name: "naadify"
 │   │   │   ├── ProgressBar.svelte          # Seek bar + time display
 │   │   │   ├── VolumeControl.svelte        # Volume slider (built, not yet wired in)
 │   │   │   ├── PlaylistSidebar.svelte      # Queue list, click-to-play
+│   │   │   ├── SearchBar.svelte            # In-app YouTube search + add-to-queue
+│   │   │   ├── PlaylistImport.svelte       # Paste playlist URL, import as queue
 │   │   │   ├── YouTubePlayer.svelte        # Wraps YT IFrame API logic
 │   │   │   ├── WeatherFX.svelte            # Rain / fog CSS overlay effect
 │   │   │   ├── WeatherToggle.svelte        # Rain / Fog toggle buttons
@@ -58,11 +61,17 @@ syntaxbeats/                                # package name: "naadify"
 │   │   ├── stores/
 │   │   │   ├── player.js                   # currentTrack, isPlaying, progress, etc.
 │   │   │   ├── online.js                   # simulated live "online now" count
-│   │   │   └── weather.js                  # 'none' | 'rain' | 'fog'
+│   │   │   ├── weather.js                  # 'none' | 'rain' | 'fog'
+│   │   │   └── queue.js                    # user-built queue from search/import,
+│   │   │                                    # persisted to localStorage
 │   │   ├── data/
-│   │   │   └── playlist.js                 # single merged playlist config
+│   │   │   └── playlist.js                 # single merged playlist config (fallback
+│   │   │                                    # used only while queue.js is empty)
 │   │   └── utils/
-│   │       └── youtube.js                  # YT IFrame API loader + helper functions
+│   │       ├── youtube.js                  # YT IFrame API loader + helper functions
+│   │       └── youtubeApi.js               # YouTube Data API v3 wrapper —
+│   │                                        # searchVideos, fetchPlaylistItems,
+│   │                                        # extractPlaylistId, YouTubeApiError
 │   ├── routes/
 │   │   ├── +layout.svelte                  # global styles, fonts
 │   │   └── +page.svelte                    # renders PlayerScreen directly
@@ -101,10 +110,11 @@ export const playlist = [
 ];
 ```
 
-## 5. YouTube Data API Integration — planned architecture
+## 5. YouTube Data API Integration — implemented (Phase 8)
 
 **Goal:** replace manual `REPLACE_WITH_YOUTUBE_ID_x` editing with two in-app flows —
-**search** and **playlist import** — both selected by Aditya (2026-08-20).
+**search** and **playlist import** — both selected by Aditya (2026-08-20). Both are
+now built, wired into `PlayerScreen.svelte`, and build-verified (2026-08-21).
 
 ### 5.1 Getting an API key
 - Create/reuse a Google Cloud project → enable **YouTube Data API v3** → create an
@@ -114,19 +124,20 @@ export const playlist = [
   for dev). This is what makes it safe to ship the key in client-side code — nobody
   else's site can use it even if they read it out of the bundle.
 - Store the key in a `.env` file as `VITE_YOUTUBE_API_KEY` (already covered by
-  `.gitignore`, never committed).
+  `.gitignore`, never committed). **Still Aditya's action item** — no `.env` is
+  checked into this repo, only `.env.example`.
 
-### 5.2 New files (to be created)
+### 5.2 Files (implemented)
 ```
-src/lib/utils/youtubeApi.js       # thin fetch wrappers around the Data API
-src/lib/components/SearchBar.svelte      # search input + results list
-src/lib/components/PlaylistImport.svelte # paste-a-URL import UI
-src/lib/stores/queue.js          # user-built queue (search/import results),
-                                  # persisted to sessionStorage (or localStorage
-                                  # if we want it to survive across sessions)
+src/lib/utils/youtubeApi.js       # searchVideos, fetchPlaylistItems, extractPlaylistId,
+                                   # YouTubeApiError — done
+src/lib/components/SearchBar.svelte      # search input + results list — done
+src/lib/components/PlaylistImport.svelte # paste-a-URL import UI — done
+src/lib/stores/queue.js           # user-built queue (search/import results),
+                                   # persisted to localStorage — done
 ```
 
-### 5.3 Search flow (FR14)
+### 5.3 Search flow (FR14) — done
 1. User types a query into `SearchBar` and presses Enter / a search button
    (deliberately, not on every keystroke — quota-friendly).
 2. `youtubeApi.searchVideos(query)` calls
@@ -137,31 +148,37 @@ src/lib/stores/queue.js          # user-built queue (search/import results),
 5. `PlayerScreen` reads from `queue.js` instead of the static `playlist.js` once at
    least one song has been added this way (fallback to `playlist.js` if empty).
 
-### 5.4 Playlist import flow (FR15)
-1. User pastes a YouTube playlist URL into `PlaylistImport`.
-2. Extract the `list=` param (playlist ID) from the URL.
+### 5.4 Playlist import flow (FR15) — done
+1. User pastes a YouTube playlist URL (or bare playlist id) into `PlaylistImport`.
+2. `extractPlaylistId()` pulls the `list=` param from the URL, or passes through a
+   bare id if that's what was pasted.
 3. `youtubeApi.fetchPlaylistItems(playlistId)` calls
    `GET https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=...&maxResults=50&key=...`
-   (paginate with `pageToken` if the playlist has more than 50 items).
-4. Map each item into our `Track` shape and either **replace** or **append to** the
-   current queue (UI should offer both, default to replace for a clean import).
+   and paginates via `pageToken` until every item is collected.
+4. Each item maps into our `Track` shape; the UI shows a preview list with two
+   explicit buttons — **"append +"** and **"replace queue"** — so Aditya chooses
+   per-import rather than the app assuming one default.
 
-### 5.5 Quota & error handling notes
+### 5.5 Quota & error handling notes — done
 - Free tier: ~10,000 units/day. `search.list` = 100 units/call, `playlistItems.list`
   = 1 unit/call. A single 50-song playlist import costs ~1 unit; a search costs 100 —
   so importing playlists is far cheaper than repeated searching.
-- If the API returns a quota-exceeded or invalid-key error, show a small inline glass
-  toast ("couldn't reach YouTube search right now") rather than breaking playback of
+- `YouTubeApiError` carries a `code` (`missing_key` / `quota_exceeded` / `invalid_key`
+  / `network` / `not_found` / `unknown`) and both `SearchBar` and `PlaylistImport`
+  render a friendly inline glass message per code rather than breaking playback of
   whatever is already queued.
 - Playback itself is unaffected either way — it still goes through the existing
   `YouTubePlayer.svelte` / IFrame API, only *how a video ID gets into the queue*
   changes.
+- **Still open:** Aditya's own manual QA against a *real* API key and a *real*
+  playlist — code path is done and build-clean, but hasn't been exercised live yet.
 
 ## 6. State Management
 - `player.js` → `{ currentIndex, isPlaying, currentTime, duration, volume }`
 - `online.js` → simulated live viewer count
 - `weather.js` → `'none' | 'rain' | 'fog'`
-- `queue.js` (planned) → user-built list of `Track`s from search/import, persisted
+- `queue.js` → user-built list of `Track`s from search/import, persisted to
+  localStorage — done, replaces the earlier "planned" status
 - YouTubePlayer component subscribes to `player` store and drives the actual IFrame
   API calls (`playVideoById`, `pauseVideo`, `seekTo`, etc.)
 

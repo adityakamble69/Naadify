@@ -70,19 +70,26 @@
       (same pattern as the queue drawer) with `SearchBar` + "clear queue"
 - [x] `npm run build` verified clean
 
-### 8b — Playlist import (not started)
-- [ ] Extend `youtubeApi.js` with `fetchPlaylistItems(playlistId)` (+ pagination)
-- [ ] Build `PlaylistImport.svelte` — paste playlist URL, extract `list=` id,
+### 8b — Playlist import ✅
+- [x] Extend `youtubeApi.js` with `fetchPlaylistItems(playlistId)` (+ pagination)
+- [x] Build `PlaylistImport.svelte` — paste playlist URL, extract `list=` id,
       fetch + paginate all items, "Replace queue" / "Append to queue" choice
-- [ ] Reuse `queue.js` `replaceQueue` (already built) for the "Replace" path
-- [ ] Add inline glass toast/error state for bad playlist URL / private playlist
-- [ ] QA: import a real playlist, confirm order + auto-advance works across the
-      whole imported list
-- [ ] Update `memory.md` once this phase ships
+- [x] Reuse `queue.js` `replaceQueue` (already built) for the "Replace" path
+- [x] Add inline glass toast/error state for bad playlist URL / private playlist
+- [x] Wired into `PlayerScreen.svelte` search drawer as a "search" / "import" tab
+      switcher — both features live in the same drawer now
+- [x] `npm run build` verified clean (static adapter output confirmed 2026-08-21)
+- [ ] QA: import a *real* playlist with a live API key, confirm order +
+      auto-advance works across the whole imported list — still needs Aditya's
+      own manual pass since it needs a real `VITE_YOUTUBE_API_KEY`
+- [ ] Update `memory.md` once QA is done (docs were stale — code was already
+      ahead of the tracked status as of 2026-08-21)
 
 ---
 **Status legend:** ⏳ pending · 🔄 in progress · ✅ done
 
-**Current phase:** Phase 8b — Playlist import, not started yet. Phase 8a (search)
-is functionally complete pending the user's own manual QA with a real API key.
-Phases 0–6 are functionally complete; Phase 7 (deploy) still pending.
+**Current phase:** Phase 8 (8a search + 8b import) is functionally complete —
+code, wiring, and build all verified. Only remaining item is Aditya's manual QA
+with a real YouTube API key. **Phase 7 (deploy) is the next real gap** — nothing
+under Phase 7 has been done yet (no static adapter deploy, no Vercel/Netlify
+push, no prod smoke test).

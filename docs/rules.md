@@ -6,8 +6,9 @@
   for effects Tailwind can't express cleanly (e.g. custom glow keyframes, rain/fog).
 - Trigger YouTube playback **inside/right after the user's first click** on the page
   to respect browser autoplay policy.
-- Keep the playlist as a simple static JS config file (`playlist.js`) for now — easy
-  for Aditya to edit video IDs, until Phase 8 (search/import) replaces this workflow.
+- Keep the playlist as a simple static JS config file (`playlist.js`) as the
+  **fallback only** — since Phase 8, the user-built `queue.js` (search/import)
+  takes priority whenever it's non-empty.
 - Make every interactive control (play, pause, next, prev, seek, volume) keyboard
   accessible.
 - Use semantic HTML where possible even inside Svelte components (`<button>` not
