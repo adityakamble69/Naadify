@@ -3,6 +3,8 @@
 	import { playlist as staticPlaylist } from '$lib/data/playlist.js';
 	import { queue } from '$lib/stores/queue.js';
 	import { weather } from '$lib/stores/weather.js';
+	import { fly } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
 	import YouTubePlayer from './YouTubePlayer.svelte';
 	import TopBar from './TopBar.svelte';
 	import BottomPlayerBar from './BottomPlayerBar.svelte';
@@ -22,6 +24,35 @@
 	let fullscreenOpen = false;
 	/** @type {'search'|'import'} */
 	let searchTab = 'search';
+
+	// Auto-opening "now playing" queue peek — slides in from the right
+	// whenever a song starts playing (anywhere in the app, including the
+	// fullscreen now-playing screen), then auto-closes itself after a bit.
+	let autoQueueOpen = false;
+	let autoQueueTimer;
+	const AUTO_QUEUE_MS = 5000;
+
+	function openAutoQueue() {
+		if (queueOpen) return; // manual queue drawer already open — don't double up
+		autoQueueOpen = true;
+		restartAutoQueueTimer();
+	}
+
+	function restartAutoQueueTimer() {
+		clearTimeout(autoQueueTimer);
+		autoQueueTimer = setTimeout(() => (autoQueueOpen = false), AUTO_QUEUE_MS);
+	}
+
+	function closeAutoQueue() {
+		clearTimeout(autoQueueTimer);
+		autoQueueOpen = false;
+	}
+
+	let wasPlaying = false;
+	$: {
+		if ($player.isPlaying && !wasPlaying) openAutoQueue();
+		wasPlaying = $player.isPlaying;
+	}
 
 	// Once the user has added anything via search, their queue takes over;
 	// otherwise fall back to the static curated playlist.
@@ -59,6 +90,7 @@
 	function selectTrack(e) {
 		ytPlayerRef?.loadTrack(e.detail, true);
 		queueOpen = false;
+		closeAutoQueue();
 	}
 
 	function handleSeek(e) {
@@ -116,7 +148,10 @@
 		on:toggle={togglePlay}
 		on:next={nextTrack}
 		on:prev={prevTrack}
-		on:queue={() => (queueOpen = true)}
+		on:queue={() => {
+			closeAutoQueue();
+			queueOpen = true;
+		}}
 		on:expand={() => (fullscreenOpen = true)}
 	>
 		<svelte:fragment slot="progress">
@@ -134,11 +169,49 @@
 			on:seek={handleSeek}
 			on:volumechange={handleVolumeChange}
 			on:queue={() => {
+				closeAutoQueue();
 				fullscreenOpen = false;
 				queueOpen = true;
 			}}
 			on:close={() => (fullscreenOpen = false)}
 		/>
+	{/if}
+
+	<!-- Auto-opening queue peek — slides in from the right whenever a track
+	     starts playing, sits above everything (including the fullscreen
+	     now-playing screen), and closes itself after a few seconds. -->
+	{#if autoQueueOpen}
+		<div class="fixed inset-y-0 right-0 z-[60] flex items-center p-4 sm:p-5 pointer-events-none">
+			<div
+				class="pointer-events-auto"
+				in:fly={{ x: 60, duration: 380, easing: quintOut }}
+				out:fly={{ x: 60, duration: 240 }}
+				on:mouseenter={() => clearTimeout(autoQueueTimer)}
+				on:mouseleave={restartAutoQueueTimer}
+			>
+				<GlassCard
+					rounded="rounded-3xl"
+					padding="p-5"
+					extraClass="w-72 sm:w-80 max-h-[65vh] flex flex-col shadow-glass-lg"
+				>
+					<div class="flex items-center justify-between mb-3 px-1 shrink-0">
+						<p class="mono-label !text-[10px]">// now playing</p>
+						<button
+							type="button"
+							on:click={closeAutoQueue}
+							aria-label="Close queue preview"
+							class="glass-btn w-7 h-7 text-white/60 hover:text-white"
+						>
+							<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+							</svg>
+						</button>
+					</div>
+					<PlaylistSidebar {playlist} on:select={selectTrack} />
+				</GlassCard>
+			</div>
+		</div>
 	{/if}
 
 	<!-- Queue drawer — docked to the left as a floating liquid-glass sidebar

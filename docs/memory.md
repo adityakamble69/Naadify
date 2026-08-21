@@ -3,9 +3,10 @@
 ## Project Snapshot
 - **Name:** Naadify — glassmorphism music player for coders (renamed from SyntaxBeats)
 - **Stack:** SvelteKit + Tailwind CSS + YouTube IFrame Player API
-- **Current phase:** Phases 0–6 and Phase 8 (search + playlist import) are
-  functionally complete and build-verified. **Phase 7 (deploy) is the only
-  phase with zero progress — that's the real next task.**
+- **Current phase:** Phases 0–6, Phase 8 (search + playlist import), and Phase 9
+  (fullscreen "now playing" view) are functionally complete and build-verified.
+  **Phase 7 (deploy) is the only phase with zero progress — that's the real
+  next task.**
 
 ## ✅ Completed
 - [x] Original SyntaxBeats build: selection screen, player, YouTube playback,
@@ -130,8 +131,25 @@
       2026-08-20) and are a separate, unrelated cleanup Aditya hasn't asked
       for yet; flagged to him in chat rather than changed silently.
 
+- [x] **Fullscreen "Now Playing" view (2026-08-21)** — new `NowPlayingScreen.svelte`,
+      opened by tapping the album thumbnail or title in `BottomPlayerBar.svelte`
+      (`fullscreenOpen` state in `PlayerScreen.svelte`). Blurred oversized-album-art
+      backdrop, big centered cover card, marquee title + "Credits: {artist}", progress
+      bar, prev/play-pause/next, volume control, and share/queue shortcuts up top.
+      Closes via minimize button or `Escape`; tapping queue from inside it collapses
+      the fullscreen view first, then opens the queue drawer. Reuses `MarqueeText`,
+      `ProgressBar`, `VolumeControl` — no duplicated logic. **Code was already built
+      and wired when this session started; docs (phases.md/architecture.md) hadn't
+      been updated yet — same stale-docs pattern as Phase 8b, caught by diffing the
+      actual component tree against the docs rather than trusting phases.md.**
+      `npm run build` re-verified clean with it included. **Not yet visually
+      screenshot-tested.**
+
 ## 🔄 Currently Being Worked On
 - Nothing actively mid-edit.
+- `NowPlayingScreen.svelte` (fullscreen now-playing view) needs a real browser
+  look-over — same caveat as the Liquid Glass redesign below, hasn't been
+  screenshotted yet this session.
 - Liquid Glass redesign hasn't been visually screenshot-tested (sandboxed build
   environment has no browser available) — build is clean and CSS is
   spec-correct, but a real look-over in a browser (esp. Safari, where

@@ -37,6 +37,10 @@ Still no server required.
   renders `PlayerScreen` directly.
 - YouTube IFrame Player is mounted once, hidden/styled to show just album-art-style
   overlay (we don't want the raw YouTube video UI visible — glass card sits on top).
+- Tapping the album thumbnail or title in `BottomPlayerBar` opens `NowPlayingScreen`,
+  a fullscreen overlay (`fullscreenOpen` state in `PlayerScreen.svelte`) with the same
+  playback controls at a larger scale, plus quick access to share and the queue. Closes
+  via its minimize button, `Escape`, or by opening the queue (auto-collapses first).
 
 ## 3. Folder & File Structure (current)
 
@@ -49,6 +53,12 @@ syntaxbeats/                                # package name: "naadify"
 │   │   │   ├── TopBar.svelte               # Status pill + live online count only
 │   │   │   ├── GlassCard.svelte            # Reusable glass panel wrapper
 │   │   │   ├── BottomPlayerBar.svelte      # Now-playing bar: controls, share, credits
+│   │   │   ├── NowPlayingScreen.svelte     # Fullscreen "now playing" overlay — opened
+│   │   │   │                                # by tapping the album thumb/title in
+│   │   │   │                                # BottomPlayerBar; big cover art, blurred
+│   │   │   │                                # ambient backdrop, marquee title, progress,
+│   │   │   │                                # transport controls, volume, share/queue
+│   │   │   │                                # shortcuts; closes via minimize button or Esc
 │   │   │   ├── MarqueeText.svelte          # Scrolling text — only animates if the
 │   │   │   │                                # content actually overflows its box;
 │   │   │   │                                # used for track titles (bar/queue/search)

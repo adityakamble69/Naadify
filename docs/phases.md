@@ -85,11 +85,25 @@
 - [ ] Update `memory.md` once QA is done (docs were stale — code was already
       ahead of the tracked status as of 2026-08-21)
 
+## Phase 9 — Fullscreen "Now Playing" View ✅
+- [x] `NowPlayingScreen.svelte` — fullscreen overlay with blurred oversized-album-art
+      backdrop, big centered cover art, marquee title + credits, progress bar,
+      prev/play-pause/next transport, volume control, share + queue shortcuts
+- [x] Opens by tapping the album thumbnail or title in `BottomPlayerBar.svelte`
+      (`expand` event → `fullscreenOpen` state in `PlayerScreen.svelte`)
+- [x] Closes via minimize button or `Escape` key; opening the queue from inside it
+      auto-collapses back to the normal player first
+- [x] Reuses existing `MarqueeText`, `ProgressBar`, `VolumeControl` components —
+      no duplicated logic
+- [x] `npm run build` verified clean with this feature included (2026-08-21)
+- [ ] Visual/browser QA (mobile + desktop) — not yet screenshot-tested
+
 ---
 **Status legend:** ⏳ pending · 🔄 in progress · ✅ done
 
-**Current phase:** Phase 8 (8a search + 8b import) is functionally complete —
-code, wiring, and build all verified. UI now uses an iOS-style Liquid Glass
-material (2026-08-21) with the queue docked left instead of right. **Phase 7
-(deploy) is the next real gap** — nothing under Phase 7 has been done yet (no
-static adapter deploy, no Vercel/Netlify push, no prod smoke test).
+**Current phase:** Phase 8 (8a search + 8b import) and Phase 9 (fullscreen
+"now playing" view) are functionally complete — code, wiring, and build all
+verified. UI now uses an iOS-style Liquid Glass material (2026-08-21) with the
+queue docked left instead of right. **Phase 7 (deploy) is the next real gap** —
+nothing under Phase 7 has been done yet (no static adapter deploy, no
+Vercel/Netlify push, no prod smoke test).
