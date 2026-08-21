@@ -112,6 +112,23 @@
       paper trail in case Aditya wants it back — the approach worked and was
       screenshot-verified before he asked to remove it, so it can be
       re-added quickly by reversing the change above if needed.)
+- [x] **Docs sync + dead-code cleanup after the removal above (2026-08-21)** —
+      deleted `InfoModal.svelte` (it was only ever used by the About/FAQ/
+      Support buttons, which no longer exist anywhere — confirmed via grep,
+      zero remaining imports, build still clean after removal). Updated
+      `docs/architecture.md`'s file tree: removed the `InfoModal.svelte` and
+      old `TopBar.svelte` "About/FAQ/Support" description, added the two
+      components that existed in code but weren't yet documented
+      (`MarqueeText.svelte`, `CloudShaderBackground.svelte`), and corrected
+      the `static/images/bg.jpg` entry to note it's unused/kept only for
+      revert. Updated `docs/design.md`'s background section to describe the
+      shader instead of the old static-image approach. Did **not** touch the
+      pre-existing Male/Female references in `README.md` / `docs/phases.md`
+      (lines like "pick Male/Female" in the README intro, `bg-male.jpg` in
+      the "swap background images" section) — those were already stale
+      before this session (the selection screen was removed back on
+      2026-08-20) and are a separate, unrelated cleanup Aditya hasn't asked
+      for yet; flagged to him in chat rather than changed silently.
 
 ## 🔄 Currently Being Worked On
 - Nothing actively mid-edit.

@@ -46,9 +46,14 @@ syntaxbeats/                                # package name: "naadify"
 │   ├── lib/
 │   │   ├── components/
 │   │   │   ├── PlayerScreen.svelte         # Main player layout + big logo overlay
-│   │   │   ├── TopBar.svelte               # Status pill, online count, About/FAQ/Support
+│   │   │   ├── TopBar.svelte               # Status pill + live online count only
 │   │   │   ├── GlassCard.svelte            # Reusable glass panel wrapper
 │   │   │   ├── BottomPlayerBar.svelte      # Now-playing bar: controls, share, credits
+│   │   │   ├── MarqueeText.svelte          # Scrolling text — only animates if the
+│   │   │   │                                # content actually overflows its box;
+│   │   │   │                                # used for track titles (bar/queue/search)
+│   │   │   ├── CloudShaderBackground.svelte # WebGL2 animated cloud shader bg (fbm +
+│   │   │   │                                # domain warp), replaces old bg.jpg image
 │   │   │   ├── ProgressBar.svelte          # Seek bar + time display
 │   │   │   ├── VolumeControl.svelte        # Volume slider (built, not yet wired in)
 │   │   │   ├── PlaylistSidebar.svelte      # Queue list, click-to-play
@@ -56,8 +61,7 @@ syntaxbeats/                                # package name: "naadify"
 │   │   │   ├── PlaylistImport.svelte       # Paste playlist URL, import as queue
 │   │   │   ├── YouTubePlayer.svelte        # Wraps YT IFrame API logic
 │   │   │   ├── WeatherFX.svelte            # Rain / fog CSS overlay effect
-│   │   │   ├── WeatherToggle.svelte        # Rain / Fog toggle buttons
-│   │   │   └── InfoModal.svelte            # About / FAQ / Support modal
+│   │   │   └── WeatherToggle.svelte        # Rain / Fog toggle buttons
 │   │   ├── stores/
 │   │   │   ├── player.js                   # currentTrack, isPlaying, progress, etc.
 │   │   │   ├── online.js                   # simulated live "online now" count
@@ -79,7 +83,9 @@ syntaxbeats/                                # package name: "naadify"
 │   └── app.html
 ├── static/
 │   ├── images/
-│   │   ├── bg.jpg                          # single background (merged from bg-male.jpg)
+│   │   ├── bg.jpg                          # UNUSED — old static bg, kept only in
+│   │   │                                    # case of revert; background is now the
+│   │   │                                    # CloudShaderBackground.svelte WebGL shader
 │   │   └── logo.png                        # Naadify brand logo
 │   └── favicon.png
 ├── docs/

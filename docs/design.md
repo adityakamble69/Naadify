@@ -20,11 +20,15 @@ cluttered, since this sits in the background while someone codes.
 | `--text-secondary` | `rgba(245,245,247,0.6)` | Secondary/meta text |
 | `--accent` | `#3FA0FF` (electric blue) | Single shared accent (replaces the old male/female split) |
 
-Background image (`bg.jpg`) sits behind everything with a dark overlay
-(`rgba(0,0,0,0.45)`) + heavy blur on non-focal areas so glass cards stay legible.
-A large Naadify logo is overlaid near the top of the page, above the background.
-Optional **rain** / **fog** CSS effects (`WeatherFX.svelte`) can render above the
-background and below the glass UI (z-index between the two).
+Background is an animated WebGL2 cloud shader (`CloudShaderBackground.svelte` —
+fbm noise + domain warp, slow drift), tinted to the Tailwind palette above
+(`base #070A12`, `sky #1959C9`, `accent #3FA0FF`, `accent-glow #6FC3FF`), sitting
+behind everything with a dark overlay (`rgba(0,0,0,0.25)`) + vertical gradient so
+glass cards stay legible. Falls back to flat `--bg-base` if WebGL2 is unavailable.
+(Replaced the earlier static `bg.jpg` approach — 2026-08-21.) A large Naadify logo
+is overlaid near the top of the page, above the background. Optional **rain** /
+**fog** CSS effects (`WeatherFX.svelte`) can render above the background and below
+the glass UI (z-index between the two).
 
 ## 3. Typography
 
