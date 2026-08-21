@@ -52,22 +52,31 @@
 			<div class="flex items-center justify-between gap-2 mb-1">
 				<MarqueeText
 					text={currentTrack?.title ?? 'Loading…'}
-					className="text-sm font-medium"
+					className="text-sm font-medium min-w-[56px]"
 				/>
-				<div class="flex items-center gap-2.5 shrink-0">
+				<div class="flex items-center gap-1.5 xs:gap-2.5 shrink-0">
 					<button
 						type="button"
-						class="mono-label !text-[10px] hover:text-white transition-colors"
+						class="mono-label !text-[10px] hover:text-white transition-colors flex items-center gap-1"
 						on:click={shareTrack}
+						aria-label={shareCopied ? 'Copied' : 'Share'}
 					>
-						{shareCopied ? 'copied!' : 'share'}
+						<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
+							<circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+							<line x1="8.6" y1="10.5" x2="15.4" y2="6.5" /><line x1="8.6" y1="13.5" x2="15.4" y2="17.5" />
+						</svg>
+						<span class="hidden xs:inline">{shareCopied ? 'copied!' : 'share'}</span>
 					</button>
 					<button
 						type="button"
-						class="mono-label !text-[10px] hover:text-white transition-colors"
+						class="mono-label !text-[10px] hover:text-white transition-colors flex items-center gap-1"
 						on:click={() => dispatch('queue')}
+						aria-label="Queue"
 					>
-						queue
+						<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="shrink-0">
+							<line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="14" y2="18" />
+						</svg>
+						<span class="hidden xs:inline">queue</span>
 					</button>
 				</div>
 			</div>

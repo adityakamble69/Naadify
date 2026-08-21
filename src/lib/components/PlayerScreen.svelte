@@ -66,7 +66,7 @@
 
 <YouTubePlayer bind:this={ytPlayerRef} {playlist} />
 
-<div class="min-h-screen w-full relative overflow-hidden bg-base">
+<div class="relative min-h-screen w-full overflow-hidden bg-base">
 	<!-- Full-bleed animated cloud shader background -->
 	<CloudShaderBackground />
 	<div class="absolute inset-0 bg-black/25"></div>
@@ -77,16 +77,14 @@
 
 	<WeatherFX mode={$weather} />
 
-	<TopBar />
-
 	<!-- Big hero logo, over the background -->
 	<div
-		class="pointer-events-none absolute inset-x-0 top-20 sm:top-28 flex flex-col items-center px-6 z-10 gap-4 sm:gap-6"
+		class="pointer-events-none absolute inset-x-0 top-20 sm:top-28 md:top-32 flex flex-col items-center px-6 z-10 gap-4 sm:gap-6"
 	>
 		<img
 			src="/images/logo.png"
 			alt="Naadify"
-			class="w-full max-w-[280px] sm:max-w-[460px] h-auto drop-shadow-[0_6px_24px_rgba(0,0,0,0.55)] animate-fadeScaleIn"
+			class="w-full max-w-[240px] xs:max-w-[280px] sm:max-w-[400px] md:max-w-[460px] h-auto drop-shadow-[0_6px_24px_rgba(0,0,0,0.55)] animate-fadeScaleIn"
 		/>
 		<button
 			type="button"
@@ -101,7 +99,7 @@
 		</button>
 	</div>
 
-	<div class="min-h-screen w-full"></div>
+	<TopBar />
 
 	<WeatherToggle />
 

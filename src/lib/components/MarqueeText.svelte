@@ -39,7 +39,7 @@
 	});
 </script>
 
-<div bind:this={containerEl} class="marquee-viewport {className}">
+<div bind:this={containerEl} class="marquee-viewport flex-1 min-w-0 {className}">
 	<!-- invisible measuring node: always full-width, never wraps -->
 	<span bind:this={measureEl} class="marquee-measure" aria-hidden="true">{text}</span>
 

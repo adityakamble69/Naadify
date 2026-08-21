@@ -78,6 +78,7 @@
 </script>
 
 <div class="flex flex-col h-full">
+	<p class="mono-label mb-3 px-1">// playlist.import()</p>
 
 	<form on:submit={onSubmit} class="flex items-center gap-2 mb-3 px-1">
 		<input

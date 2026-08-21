@@ -81,6 +81,37 @@
       real look-over (incl. older/lower-end GPUs, since it's WebGL2-only) is
       worth doing before calling this QA'd. `static/images/bg.jpg` left in
       the repo untouched, not deleted, in case Aditya wants to revert.
+      **Update (2026-08-21, same session): this WAS visually verified** —
+      Playwright/Chromium was made to work in this sandbox after all; see
+      responsiveness entry below.
+- [x] **Full responsive pass, verified with real browser screenshots
+      (2026-08-21)** — got Playwright+Chromium running in the sandbox and
+      screenshotted mobile (390px, plus a tight 320px iPhone-SE-class width),
+      tablet (820px), and laptop (1440px), both at rest and mid-interaction
+      (queue drawer, search drawer). Everything scaled cleanly except one real
+      bug, now fixed: at 320px the "share"/"queue" text buttons in the
+      now-playing bar needed more width than the title column had, squeezing
+      the track title to 0px (invisible). Fixed by converting those two into
+      icon+label buttons (label hides below the new `xs: 400px` Tailwind
+      breakpoint, icon always shows) and giving `MarqueeText` a `min-w-[56px]`
+      floor there. Added `xs: 400px` to `tailwind.config.js` screens for this
+      and any future smallest-phone tuning.
+- [x] **About/FAQ/Support removed entirely (2026-08-21)** — Aditya had asked
+      for them moved into a scroll-gated footer (see below, now superseded),
+      then decided to drop them altogether. Deleted `Footer.svelte`, removed
+      the import/usage from `PlayerScreen.svelte`, and collapsed the page
+      back to a single non-scrolling `min-h-screen` view (confirmed via
+      Playwright that `document.body.scrollHeight === window.innerHeight` —
+      no leftover empty scroll space). `TopBar.svelte` now only has the two
+      status pills (playing/paused, online count) — untouched from the
+      previous session, already had no About/FAQ/Support in it.
+- [x] ~~Scroll-gated footer with About/FAQ/Support (2026-08-21)~~ —
+      **superseded/removed same session, see above.** (Built a `Footer.svelte`
+      below the hero section, restructured the page to allow real scroll so
+      it only appeared once the person scrolled down. Kept here only as a
+      paper trail in case Aditya wants it back — the approach worked and was
+      screenshot-verified before he asked to remove it, so it can be
+      re-added quickly by reversing the change above if needed.)
 
 ## 🔄 Currently Being Worked On
 - Nothing actively mid-edit.
