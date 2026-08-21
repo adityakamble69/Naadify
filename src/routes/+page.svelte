@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Naadify // music for coders</title>
+	<title>Naadify</title>
 </svelte:head>
 
 <PlayerScreen />
