@@ -2,6 +2,8 @@
 	import { player } from '$lib/stores/player.js';
 	import { createEventDispatcher } from 'svelte';
 	import MarqueeText from './MarqueeText.svelte';
+	import VolumeControl from './VolumeControl.svelte';
+	import GlassCard from './GlassCard.svelte';
 
 	/** @type {{id:string,title:string,artist:string,thumbnail:string}[]} */
 	export let playlist = [];
@@ -10,6 +12,14 @@
 	$: currentTrack = playlist[$player.currentIndex] ?? playlist[0];
 
 	let shareCopied = false;
+	let volumeOpen = false;
+	let volumeWrapperEl;
+
+	function handleWindowClick(e) {
+		if (volumeOpen && volumeWrapperEl && !volumeWrapperEl.contains(e.target)) {
+			volumeOpen = false;
+		}
+	}
 
 	async function shareTrack() {
 		const text = currentTrack ? `${currentTrack.title} — ${currentTrack.artist}` : 'Naadify';
@@ -35,6 +45,8 @@
 		}
 	}
 </script>
+
+<svelte:window on:click={handleWindowClick} />
 
 <div class="fixed bottom-0 left-0 right-0 z-30 flex justify-center p-4 sm:p-5">
 	<div
@@ -155,6 +167,42 @@
 					<path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z" />
 				</svg>
 			</button>
+
+			<!-- Volume — desktop-only quick access popover; mobile uses the
+			     fullscreen player's VolumeControl instead (no room down here). -->
+			<div class="relative hidden sm:block" bind:this={volumeWrapperEl}>
+				<button
+					type="button"
+					on:click={() => (volumeOpen = !volumeOpen)}
+					aria-label="Volume"
+					aria-expanded={volumeOpen}
+					class="glass-btn w-9 h-9 text-white/70 hover:text-white"
+				>
+					{#if $player.volume === 0}
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+							<line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>
+						</svg>
+					{:else}
+						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+							<path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+						</svg>
+					{/if}
+				</button>
+
+				{#if volumeOpen}
+					<div class="absolute bottom-full right-0 mb-2 z-10">
+						<GlassCard
+							rounded="rounded-2xl"
+							padding="p-3"
+							extraClass="w-36 animate-fadeScaleIn"
+						>
+							<VolumeControl on:volumechange={(e) => dispatch('volumechange', e.detail)} />
+						</GlassCard>
+					</div>
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>

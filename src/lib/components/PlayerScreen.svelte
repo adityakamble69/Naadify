@@ -148,6 +148,7 @@
 		on:toggle={togglePlay}
 		on:next={nextTrack}
 		on:prev={prevTrack}
+		on:volumechange={handleVolumeChange}
 		on:queue={() => {
 			closeAutoQueue();
 			queueOpen = true;
@@ -184,6 +185,7 @@
 		<div class="fixed inset-y-0 right-0 z-[60] flex items-center p-4 sm:p-5 pointer-events-none">
 			<div
 				class="pointer-events-auto"
+				role="presentation"
 				in:fly={{ x: 60, duration: 380, easing: quintOut }}
 				out:fly={{ x: 60, duration: 240 }}
 				on:mouseenter={() => clearTimeout(autoQueueTimer)}

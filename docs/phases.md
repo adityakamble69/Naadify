@@ -31,7 +31,9 @@
 - [x] `ProgressBar.svelte` — seek bar synced to currentTime/duration
 - [x] `PlaylistSidebar.svelte` (the "queue") — thumbnail + title + credits,
       active-track highlight, click-to-play
-- [ ] `VolumeControl.svelte` — component exists, not yet wired into the visible UI
+- [x] `VolumeControl.svelte` — wired into `BottomPlayerBar.svelte` as a desktop
+      quick-access popover (speaker icon → click-to-open slider, closes on
+      outside click); already wired into `NowPlayingScreen.svelte` too
 
 ## Phase 5 — Extra Features (Deluxe-Salon-inspired) ✅
 - [x] Live "X online" counter (cosmetic, drifts every few seconds) — `online.js`
