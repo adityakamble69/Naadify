@@ -1,6 +1,7 @@
 <script>
 	import { player } from '$lib/stores/player.js';
 	import { createEventDispatcher } from 'svelte';
+	import MarqueeText from './MarqueeText.svelte';
 
 	/** @type {{id:string,title:string,artist:string,thumbnail:string}[]} */
 	export let playlist = [];
@@ -49,7 +50,10 @@
 		<!-- Title + progress -->
 		<div class="min-w-0 flex-1">
 			<div class="flex items-center justify-between gap-2 mb-1">
-				<p class="text-sm font-medium truncate">{currentTrack?.title ?? 'Loading…'}</p>
+				<MarqueeText
+					text={currentTrack?.title ?? 'Loading…'}
+					className="text-sm font-medium"
+				/>
 				<div class="flex items-center gap-2.5 shrink-0">
 					<button
 						type="button"

@@ -1,6 +1,7 @@
 <script>
 	import { player } from '$lib/stores/player.js';
 	import { createEventDispatcher } from 'svelte';
+	import MarqueeText from './MarqueeText.svelte';
 
 	/** @type {{id:string,title:string,artist:string,thumbnail:string}[]} */
 	export let playlist = [];
@@ -37,13 +38,12 @@
 				/>
 
 				<span class="min-w-0 flex-1">
-					<span
-						class="block text-sm truncate {i === $player.currentIndex
+					<MarqueeText
+						text={track.title}
+						className="text-sm {i === $player.currentIndex
 							? 'text-white font-medium'
 							: 'text-white/80'}"
-					>
-						{track.title}
-					</span>
+					/>
 					<span class="block text-xs text-white/40 truncate">{track.artist}</span>
 				</span>
 			</button>

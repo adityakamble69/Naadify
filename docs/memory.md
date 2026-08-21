@@ -57,6 +57,30 @@
       (`sm:ml-5 sm:my-5`, stretches to near-full height via `sm:items-stretch`).
       Mobile behavior unchanged (still a bottom sheet). Search/import drawer
       intentionally left centered — not part of this request.
+- [x] **Scrolling ("marquee") track titles (2026-08-21)** — new reusable
+      `MarqueeText.svelte`: measures whether the title actually overflows its
+      box before animating anything (short titles stay static), scrolls in a
+      seamless CSS loop, pauses on hover. Wired into the three places showing
+      a track title: `BottomPlayerBar.svelte` (now-playing bar),
+      `PlaylistSidebar.svelte` (queue list), `SearchBar.svelte` (search
+      results). Artist line under each title left as plain `truncate` — only
+      the title was reported as not scrolling.
+- [x] **Static background replaced with animated cloud shader (2026-08-21)** —
+      Aditya asked for `npx shadcn@latest add @aceternity/cloud-shader-demo`;
+      that registry component is React/Next-only with no SvelteKit
+      equivalent, so instead built `CloudShaderBackground.svelte`: a raw
+      WebGL2 fullscreen-triangle shader (fbm noise + domain warp, slow drift)
+      tinted to the existing Tailwind palette (`base #070A12`,
+      `sky #1959C9`, `accent #3FA0FF`, `accent-glow #6FC3FF`) so it reads as
+      part of the same design system. Replaces `bg.jpg` entirely in
+      `PlayerScreen.svelte`; existing dark overlay + vertical gradient kept
+      unchanged on top for text legibility. Auto-pauses on
+      `visibilitychange` when tab isn't focused, capped at 2x DPR, falls back
+      to flat `bg-base` color if WebGL2 is unavailable. **Not yet visually
+      screenshot-tested** — no browser in this sandbox; build is clean but a
+      real look-over (incl. older/lower-end GPUs, since it's WebGL2-only) is
+      worth doing before calling this QA'd. `static/images/bg.jpg` left in
+      the repo untouched, not deleted, in case Aditya wants to revert.
 
 ## 🔄 Currently Being Worked On
 - Nothing actively mid-edit.

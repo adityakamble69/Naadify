@@ -13,6 +13,7 @@
 	import GlassCard from './GlassCard.svelte';
 	import WeatherFX from './WeatherFX.svelte';
 	import WeatherToggle from './WeatherToggle.svelte';
+	import CloudShaderBackground from './CloudShaderBackground.svelte';
 
 	let ytPlayerRef;
 	let queueOpen = false;
@@ -66,11 +67,8 @@
 <YouTubePlayer bind:this={ytPlayerRef} {playlist} />
 
 <div class="min-h-screen w-full relative overflow-hidden bg-base">
-	<!-- Full-bleed background -->
-	<div
-		class="absolute inset-0 bg-cover bg-center scale-105"
-		style="background-image: url('/images/bg.jpg');"
-	></div>
+	<!-- Full-bleed animated cloud shader background -->
+	<CloudShaderBackground />
 	<div class="absolute inset-0 bg-black/25"></div>
 	<div
 		class="pointer-events-none absolute inset-0"

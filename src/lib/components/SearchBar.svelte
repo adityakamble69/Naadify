@@ -1,6 +1,7 @@
 <script>
 	import { searchVideos, YouTubeApiError } from '$lib/utils/youtubeApi.js';
 	import { queue } from '$lib/stores/queue.js';
+	import MarqueeText from './MarqueeText.svelte';
 
 	let queryInput = '';
 	/** @type {import('$lib/utils/youtubeApi.js').Track[]} */
@@ -59,7 +60,6 @@
 </script>
 
 <div class="flex flex-col h-full">
-	<p class="mono-label mb-3 px-1">// search.videos()</p>
 
 	<form on:submit={onSubmit} class="flex items-center gap-2 mb-3 px-1">
 		<input
@@ -102,7 +102,7 @@
 					class="w-10 h-10 rounded-lg object-cover shrink-0 bg-white/10"
 				/>
 				<span class="min-w-0 flex-1">
-					<span class="block text-sm truncate text-white/90">{track.title}</span>
+					<MarqueeText text={track.title} className="text-sm text-white/90" />
 					<span class="block text-xs text-white/40 truncate">{track.artist}</span>
 				</span>
 				<button
