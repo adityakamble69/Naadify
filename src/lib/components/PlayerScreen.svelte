@@ -14,10 +14,12 @@
 	import WeatherFX from './WeatherFX.svelte';
 	import WeatherToggle from './WeatherToggle.svelte';
 	import CloudShaderBackground from './CloudShaderBackground.svelte';
+	import NowPlayingScreen from './NowPlayingScreen.svelte';
 
 	let ytPlayerRef;
 	let queueOpen = false;
 	let searchOpen = false;
+	let fullscreenOpen = false;
 	/** @type {'search'|'import'} */
 	let searchTab = 'search';
 
@@ -61,6 +63,12 @@
 
 	function handleSeek(e) {
 		ytPlayerRef?.seekTo(e.detail);
+	}
+
+	function handleVolumeChange(e) {
+		const value = e.detail;
+		ytPlayerRef?.setVolume(value);
+		player.update((p) => ({ ...p, volume: value }));
 	}
 </script>
 
@@ -109,11 +117,29 @@
 		on:next={nextTrack}
 		on:prev={prevTrack}
 		on:queue={() => (queueOpen = true)}
+		on:expand={() => (fullscreenOpen = true)}
 	>
 		<svelte:fragment slot="progress">
 			<ProgressBar on:seek={handleSeek} />
 		</svelte:fragment>
 	</BottomPlayerBar>
+
+	<!-- Fullscreen "now playing" view -->
+	{#if fullscreenOpen}
+		<NowPlayingScreen
+			{playlist}
+			on:toggle={togglePlay}
+			on:next={nextTrack}
+			on:prev={prevTrack}
+			on:seek={handleSeek}
+			on:volumechange={handleVolumeChange}
+			on:queue={() => {
+				fullscreenOpen = false;
+				queueOpen = true;
+			}}
+			on:close={() => (fullscreenOpen = false)}
+		/>
+	{/if}
 
 	<!-- Queue drawer — docked to the left as a floating liquid-glass sidebar
 	     on desktop; still a reachable bottom sheet on mobile. -->

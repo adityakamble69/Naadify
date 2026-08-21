@@ -40,15 +40,26 @@
 	<div
 		class="glass glass-strong glass-liquid rounded-3xl px-4 py-3 sm:px-5 sm:py-3.5 w-full max-w-xl flex items-center gap-3 sm:gap-4 animate-fadeScaleIn"
 	>
-		<!-- Album thumb -->
-		<div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden shrink-0 bg-white/10">
+		<!-- Album thumb — tap to open the fullscreen player -->
+		<button
+			type="button"
+			on:click={() => dispatch('expand')}
+			aria-label="Open fullscreen player"
+			class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden shrink-0 bg-white/10 transition-transform hover:scale-105 active:scale-95"
+		>
 			{#if currentTrack}
 				<img src={currentTrack.thumbnail} alt="" class="w-full h-full object-cover" />
 			{/if}
-		</div>
+		</button>
 
-		<!-- Title + progress -->
-		<div class="min-w-0 flex-1">
+		<!-- Title + progress — tap to open the fullscreen player -->
+		<div
+			class="min-w-0 flex-1 cursor-pointer"
+			role="button"
+			tabindex="0"
+			on:click={() => dispatch('expand')}
+			on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && dispatch('expand')}
+		>
 			<div class="flex items-center justify-between gap-2 mb-1">
 				<MarqueeText
 					text={currentTrack?.title ?? 'Loading…'}
@@ -58,7 +69,7 @@
 					<button
 						type="button"
 						class="mono-label !text-[10px] hover:text-white transition-colors flex items-center gap-1"
-						on:click={shareTrack}
+						on:click|stopPropagation={shareTrack}
 						aria-label={shareCopied ? 'Copied' : 'Share'}
 					>
 						<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
@@ -70,7 +81,7 @@
 					<button
 						type="button"
 						class="mono-label !text-[10px] hover:text-white transition-colors flex items-center gap-1"
-						on:click={() => dispatch('queue')}
+						on:click|stopPropagation={() => dispatch('queue')}
 						aria-label="Queue"
 					>
 						<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="shrink-0">
@@ -78,12 +89,25 @@
 						</svg>
 						<span class="hidden xs:inline">queue</span>
 					</button>
+					<button
+						type="button"
+						class="text-white/50 hover:text-white transition-colors flex items-center"
+						on:click|stopPropagation={() => dispatch('expand')}
+						aria-label="Open fullscreen player"
+					>
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
+							<polyline points="4 14 4 20 10 20" /><polyline points="20 10 20 4 14 4" />
+							<line x1="4" y1="20" x2="10" y2="14" /><line x1="20" y1="4" x2="14" y2="10" />
+						</svg>
+					</button>
 				</div>
 			</div>
 			<p class="text-xs text-white/40 truncate mb-1.5 hidden sm:block">
 				{currentTrack ? `Credits: ${currentTrack.artist}` : ''}
 			</p>
-			<slot name="progress" />
+			<div on:click|stopPropagation on:keydown|stopPropagation role="presentation">
+				<slot name="progress" />
+			</div>
 		</div>
 
 		<!-- Controls -->
